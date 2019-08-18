@@ -6,6 +6,7 @@ const sqlite3 = require('sqlite3');
 const bodyParser = require('body-parser');
 const Sequelize = require('sequelize');
 const methodOverride = require('method-override');
+const session = require('express-session');
 
 const app = express();
 
@@ -17,6 +18,12 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
 
 app.set('view engine', 'pug');
+
+app.use(session({
+    secret: ['ehbhhfdfjnfnhfhfnjgd', 'bsdhbbdhhdsjffhjnfd'],
+    saveUninitialized: false,
+    resave: false
+}));
 
 app.use(tasksRoute);
 app.use(registrationsRoute);
