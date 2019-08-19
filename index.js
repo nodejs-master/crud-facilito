@@ -8,6 +8,8 @@ const Sequelize = require('sequelize');
 const methodOverride = require('method-override');
 const session = require('express-session');
 
+const socketio = require('socket.io');
+
 const app = express();
 
 const tasksRoute = require('./routes/tasks_routes');
@@ -40,4 +42,19 @@ app.get('/', function(req, res) {
     res.render('home', { user: req.user });
 });
 
-app.listen(3000);
+let server = app.listen(3000);
+let io = socketio(server);
+
+let userCount = 0;
+
+io.on('connection', function(socket) {
+    userCount++;
+
+    io.emit('count_updated', { count: userCount });
+
+    socket.on('disconnect', function() {
+        userCount--;
+
+        io.emit('count_updated', { count: userCount });
+    })
+});
