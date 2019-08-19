@@ -13,7 +13,7 @@ module.exports = {
             include: [{
                 model: User,
                 as: 'user'
-            }]
+            }, 'categories']
         }).then(function(task) {
             res.render('tasks/show', { task: task });
         })
@@ -21,6 +21,7 @@ module.exports = {
 
     edit: function(req, res) {
         Task.findByPk(req.params.id).then(function(task) {
+
             res.render('tasks/edit', { task: task });
         })
     },
@@ -47,12 +48,15 @@ module.exports = {
     },
 
     update: function(req, res) {
-        Task.update({ description: req.body.description }, {
-            where: {
-                id: req.params.id
-            }
-        }).then(function(response) {
-            res.redirect('/tasks/' + req.params.id);
+        task = Task.findByPk(req.params.id).then(function(task) {
+            task.description = req.body.description;
+            task.save().then(() => {
+                let categoryIds = req.body.categories.split(",");
+
+                task.addCategories(categoryIds).then(() => {
+                    res.redirect(`/tasks/${task.id}`);
+                })
+            })
         })
     },
 
