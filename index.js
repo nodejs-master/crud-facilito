@@ -12,6 +12,7 @@ const app = express();
 
 const tasksRoute = require('./routes/tasks_routes');
 const registrationsRoute = require('./routes/registrations_routes');
+const categoriesRoute = require('./routes/categories_routes');
 const sessionsRoute = require('./routes/sessions_routes');
 
 const finUserMiddleware = require('./middleware/find_user');
@@ -32,6 +33,7 @@ app.use(authUser);
 
 app.use(tasksRoute);
 app.use(registrationsRoute);
+app.use(categoriesRoute);
 app.use(sessionsRoute);
 
 app.get('/', function(req, res) {
